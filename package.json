@@ -10,10 +10,12 @@
   "author": "ritulsingh",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/passport": "^2.2.0",
+    "@fastify/session": "^10.1.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.12.0",
     "mongoose": "^6.9.0",
-    "passport": "^0.6.0",
     "passport-local": "^1.0.0"
   }
 }

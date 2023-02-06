@@ -1,10 +1,23 @@
 require("dotenv").config();
 const fastify = require('fastify')({ logger: true });
 const { connectMongoose, User } = require('./database');
+const { initializingPassport } = require('./passportConfig');
+const fastifySession = require('@fastify/session');
+const fastifyCookie = require('@fastify/cookie');
+const fastifyPassport = require('@fastify/passport');
 
 const PORT = process.env.PORT || 5000;
 
-connectMongoose();
+connectMongoose(); // Connect to Database
+initializingPassport(fastifyPassport);
+
+// For Session
+fastify.register(fastifyCookie);
+fastify.register(fastifySession, { secret: 'a secret with a minimum length of 32 characters' });
+
+// Passport Registration
+fastify.register(fastifyPassport.initialize());
+fastify.register(fastifyPassport.secureSession());
 
 // For now its just for testing purposes
 fastify.get('/', async (req, res) => {
@@ -20,6 +33,13 @@ fastify.post('/register', async (req, res) => {
     const newUser = await User.create(req.body);
     res.status(201).send(newUser);
 })
+
+// For login of user
+fastify.post('/login', {
+    preValidation: fastifyPassport.authenticate('local')
+}, async (req, res) => {
+    res.send("User Successfully Login");
+});
 
 // Run the server!
 fastify.listen({ port: PORT, host: "127.0.0.1" }, function (err, address) {

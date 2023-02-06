@@ -1,0 +1,19 @@
+{
+  "name": "try-passport-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "ritulsingh",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "fastify": "^4.12.0",
+    "mongoose": "^6.9.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  }
+}

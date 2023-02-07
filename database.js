@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const crypto = require("crypto");
 
 exports.connectMongoose = async () => {
     try {
@@ -21,7 +22,19 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: String
+    hash: String,
+    salt: String
 });
+
+userSchema.methods.setPassword = function (password) {
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`);
+};
+
+userSchema.methods.validPassword = function (password) {
+    console.log(password)
+    let hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`);
+    return this.hash === hash;
+};
 
 exports.User = mongoose.model('User', userSchema);

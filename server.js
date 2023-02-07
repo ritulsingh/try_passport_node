@@ -6,6 +6,8 @@ const fastifySession = require('@fastify/session');
 const fastifyCookie = require('@fastify/cookie');
 const fastifyPassport = require('@fastify/passport');
 
+const crypto = require('crypto');
+
 const PORT = process.env.PORT || 5000;
 
 connectMongoose(); // Connect to Database
@@ -30,8 +32,22 @@ fastify.post('/register', async (req, res) => {
     if (user) {
         return res.status(200).send("User already registered");
     }
-    const newUser = await User.create(req.body);
-    res.status(201).send(newUser);
+    let newUser = new User();
+    newUser.username = req.body.username
+    newUser.setPassword(req.body.password)
+    newUser.save((err, user) => {
+        if (err) {
+            return res.status(400).send({
+                message: "Failed to add user."
+            });
+        }
+        else {
+            return res.status(200).send({
+                message: "User added successfully.", 
+                data: user
+            });
+        }
+    });
 })
 
 // For login of user

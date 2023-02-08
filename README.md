@@ -25,7 +25,7 @@ If the installation was successful, you should be able to run the following comm
     v18.12.1
     
     $ npm --version
-    8.15.0
+    8.19.0
 
 ---
 
